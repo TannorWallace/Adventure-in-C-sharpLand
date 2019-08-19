@@ -44,7 +44,7 @@ namespace CastleGrimtol.Project
     public void Go(string direction)
     {
       // this is where you need to add all of your direction methods. no directions.cs
-
+      CurrentRoom = CurrentRoom.Go(direction);
 
     }
 
@@ -55,6 +55,11 @@ namespace CastleGrimtol.Project
 
     public void Inventory()
     {
+      System.Console.WriteLine($"{CurrentPlayer.PlayerName}'satchel");
+      foreach (var item in CurrentPlayer.Inventory)
+      {
+        System.Console.WriteLine(item.Name);
+      }
 
     }
 
@@ -62,7 +67,7 @@ namespace CastleGrimtol.Project
     {
       System.Console.WriteLine($"You enter {CurrentRoom.Name}");
       System.Console.WriteLine($"{CurrentRoom.Description}");
-      CurrentRoom.Items();
+      // CurrentRoom.Items();
 
     }
 
@@ -155,6 +160,13 @@ namespace CastleGrimtol.Project
       System.Console.WriteLine("");
       System.Console.WriteLine("Welcome to a game that was SUPPOSED to be a scary psychological thriller!!(add dramatic music here)");
       #endregion
+
+
+      System.Console.WriteLine("Do you remember your name?");
+      string name = Console.ReadLine();
+      CurrentPlayer = new Player(name);
+
+
       while (inGame)
       {
         System.Console.WriteLine("What do you want to do?");
