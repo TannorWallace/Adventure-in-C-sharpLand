@@ -19,6 +19,7 @@ namespace CastleGrimtol.Project.Models
       Exits.Add(direction, room);
     }
 
+
     public void AddItem(Item item)
     {
       Items.Add(item);
@@ -33,7 +34,7 @@ namespace CastleGrimtol.Project.Models
         Console.Clear();
         return Exits[direction];
       }
-      System.Console.WriteLine("Something tells you you should try another way!");
+      // System.Console.WriteLine("Something tells you you should try another way!");
       //ok that took forfreaking ever! 
       return this;
     }
@@ -51,6 +52,7 @@ namespace CastleGrimtol.Project.Models
       Items = new List<Item>();
       Exits = new Dictionary<string, IRoom>();
       //super confused face
+      // NOTE exits should be based on directions you want your user to be able to go  
     }
   }
 }

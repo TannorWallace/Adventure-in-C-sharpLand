@@ -17,40 +17,22 @@ namespace CastleGrimtol.Project
       System.Console.WriteLine($"What would you like to do.{CurrentPlayer.PlayerName}?");
       string PlayerChoice = Console.ReadLine();
 
-      switch (PlayerChoice.ToLower())
-      {
-        case "leave shack":
-          Go("Leave Shack");
-          break;
-        //umm...i think this  is correct? will this allow me to type in look around?
-        case "look around":
-          Look();
-          break;
 
-        case "Satchel":
-          Inventory();
-          break;
-
-        case "":
-          break;
-
-
-
-
-      }
 
     }
 
     public void Go(string direction)
     {
       // this is where you need to add all of your direction methods. no directions.cs
-      CurrentRoom = CurrentRoom.Go(direction);
+      CurrentRoom = CurrentRoom.Exits[direction];
+
 
     }
 
     public void Help()
     {
-      // No its like dark souls...you figure it out. (grumpy hurrumpha!!)
+      System.Console.WriteLine("No its like dark souls...you figure it out. (grumpy hurrumpha!!)");
+
     }
 
     public void Inventory()
@@ -65,9 +47,9 @@ namespace CastleGrimtol.Project
 
     public void Look()
     {
-      System.Console.WriteLine($"You enter {CurrentRoom.Name}");
       System.Console.WriteLine($"{CurrentRoom.Description}");
-      // CurrentRoom.Items();
+      System.Console.WriteLine($"You enter {CurrentRoom.Name}");
+
 
     }
 
@@ -85,10 +67,11 @@ namespace CastleGrimtol.Project
 
     public void Setup()
     {
+      // NOTE define a structure; list all rooms then all items, or all rooms and directions. 
+
       Room sketchyShack = new Room("Sketchy Shack", "You awaken in a Sketchy shack with no knowledge of how you got there. How did you get there? Where are you?");
 
       //leave the sketchyShack and find an axe/hammer/used hunting knife?<--that sounds far fetched but kinda dope.
-      // Item huntingKnife = new Item("Hunting Knife", "Outside of the shack you find a rusty hunting knife...Do you take it?");
 
       Room mistShroudedRoad = new Room(" Mist shrouded dirt road", "you leave the shack and find yourself at the end of a road covered in think mist, to thick to determine any land marks or direction");
 
@@ -97,28 +80,50 @@ namespace CastleGrimtol.Project
 
       Room mistShroudedForest = new Room("Mist shrouded Forest", "After travelling down the misty road for a few mintues you start to see the start of what looks like a treeline...and possibly movement of a humaniod figure on the only path...");
       //   ummmm ok this is where you have a battle with a monster...
-      // I also dont know if to add more forest or not...
+
 
       Room theCave = new Room("The Cave", "Weery and tired from your ordeals in the forest, you see it...the source of the dreams...the source of the dark calling that has been plagueing your dreams, the source of your current plight...The cave.");
-      //maybe prompt for choices here? rest? or proceed into the cave? run back to the forest? <--idk thats kinda dumb
 
+      #region possible keep exits
       //   sketchyShack.AddExit("proceed", mistShroudedRoad);
-      sketchyShack.Exits.Add("proceed", mistShroudedRoad);
-      mistShroudedForest.Exits.Add("proceed", mistShroudedForest);
-      mistShroudedForest.Exits.Add("proceed", theCave);
+      // sketchyShack.Exits.Add("North", mistShroudedRoad);
+      // mistShroudedForest.Exits.Add("North", mistShroudedForest);
+      // mistShroudedForest.Exits.Add("North", theCave);
+      #endregion
+
       Item huntingKnife = new Item("Hunting Knife", "As you leave the Sketchy Shack your boot hits something just outside the door, you look down and see a worn looking hunting knife");
 
-      mistShroudedRoad.Items.Add(huntingKnife);
 
       Item flashLight = new Item("Flashlight", "On the mist shrouded road you come across an abandoned car. The car seems to have what looks like dried blood on the windsheild and on the ground by the open driverside door. You approach the vehichle with eary apprehension and search the inside. You don't discover anything of real use...besides a flashlight ");
-      mistShroudedForest.Items.Add(flashLight);
+      Item molotovCocktail = new Item("Molotov Cocktail", "At the entrance of The Cave you find a convient stash of Molotov CockTails but, there is only one left inside the weathered looking box.");
 
-      CurrentRoom = sketchyShack;
+
+
+      //TODO
+      #region GO DIRECTIONS?
+      sketchyShack.AddExit("north", mistShroudedRoad);
+      mistShroudedRoad.AddExit("north", mistShroudedForest);
+      mistShroudedRoad.AddExit("south", sketchyShack);
+      mistShroudedForest.AddExit("north", theCave);
+      mistShroudedForest.AddExit("south", mistShroudedRoad);
+      theCave.AddExit("south", mistShroudedForest);
+      #endregion
+
+      #region ITEMS
+
+      mistShroudedRoad.Items.Add(huntingKnife);
+      mistShroudedForest.Items.Add(flashLight);
+      mistShroudedForest.Items.Add(molotovCocktail);
+      #endregion
+      CurrentRoom = (Room)sketchyShack;
+
     }
 
     public void StartGame()
     //OK, I THINK ALL OF THIS SHIT HAS TO HAPPEN INSIDE OF THE WHILE LOOP FROM THE PUBLIC VOID RUN SECION OF THE PLANET EXPRESS EXAMPLE (MIDDLE FINGER)
     {
+      Setup();
+
       Console.Clear();
       System.Console.WriteLine("");
       System.Console.WriteLine("    You set out to find respite but found only horror, the nightmares that have kept you from rest have begun to seem real....the images you had been seeing in your mind have begun to seep in to reality, after months of what has seemed like hell you are ready to face the one thing these nightmares have in common. A nameless cave in the thick forests of northern Idaho...it calls from your nightmares and draws you in your waking moments...you set out heading north, to find out who or what is behind...");
@@ -171,16 +176,58 @@ namespace CastleGrimtol.Project
       {
         System.Console.WriteLine("What do you want to do?");
         string[] input = Console.ReadLine().ToLower().Split();
+        string command = input[0];
+        string secondary = "";
+        if (input.Length > 1)
+        {
+          secondary = input[1];
+        }
+        #region switchDirectionandCommands
+        switch (command)
+        {
+          //ok now lets try to move?
+          case "go":
+            Go(secondary);
+            System.Console.WriteLine($"You entered{CurrentRoom.Name}.");
+            break;
+          case "quit":
+            Quit();
+            break;
+          // look?
+          case "look":
+            Look();
+            break;
+          case "satchel":
+            Inventory();
+            break;
+          case "restart":
+            Reset();
+            break;
+          case "grab":
+            TakeItem(secondary);
+            break;
+          case "help":
+            Help();
+            break;
+          default:
+            System.Console.WriteLine("You cannot do that");
+            break;
+
+        }
+
+
 
       }
-
-
+      #endregion
     }
-
-
-
     public void TakeItem(string itemName)
     {
+      Item item = CurrentRoom.Items.Find(i => i.Name.ToLower() == itemName.ToLower());
+      if (item != null)
+      {
+        System.Console.WriteLine(item.Description);
+
+      }
 
     }
 
