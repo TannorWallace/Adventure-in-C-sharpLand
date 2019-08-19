@@ -13,6 +13,6 @@ namespace CastleGrimtol.Project.Interfaces
     Dictionary<string, IRoom> Exits { get; set; }
     IRoom Go(string direction);
     IRoom GetRoom(string direction);
-    void Items();
+
   }
 }

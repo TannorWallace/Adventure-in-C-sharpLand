@@ -31,7 +31,8 @@ namespace CastleGrimtol.Project
           Inventory();
           break;
 
-        case
+        case "":
+          break;
 
 
 
@@ -49,7 +50,7 @@ namespace CastleGrimtol.Project
 
     public void Help()
     {
-
+      // No its like dark souls...you figure it out. (grumpy hurrumpha!!)
     }
 
     public void Inventory()
