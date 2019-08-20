@@ -31,31 +31,44 @@ namespace CastleGrimtol.Project
 
     public void Help()
     {
-      System.Console.WriteLine("No its like dark souls...you figure it out. (grumpy hurrumpha!!)");
+      System.Console.WriteLine("No its C#...you figure it out. (grumpy hurrumpha!!)");
 
     }
 
     public void Inventory()
+    //IDFK what to do here....
     {
-      System.Console.WriteLine($"{CurrentPlayer.PlayerName}'satchel");
+      System.Console.WriteLine($"{CurrentPlayer.PlayerName}'s satchel");
       foreach (var item in CurrentPlayer.Inventory)
       {
-        System.Console.WriteLine(item.Name);
+        System.Console.WriteLine("You have ", item.Name, "in your satchel");
+        // System.Console.WriteLine(item.Name);
       }
 
     }
 
     public void Look()
     {
+
+      // System.Console.WriteLine($"You enter {CurrentRoom.Name}");
       System.Console.WriteLine($"{CurrentRoom.Description}");
-      System.Console.WriteLine($"You enter {CurrentRoom.Name}");
+
+      foreach (var item in CurrentRoom.Items)
+      {
+        System.Console.WriteLine($"You find a {item.Name} ");
+      }
+
+      // if (CurrentRoom.Items.Contains(CurrentRoom.Items.huntingKnife))
+      // {
+
+      // }
 
 
     }
 
     public void Quit()
     {
-      System.Console.WriteLine("Farewell");
+      System.Console.WriteLine("You failed to complete this task!...sound familiar? Farewell");
       inGame = false;
     }
 
@@ -66,14 +79,15 @@ namespace CastleGrimtol.Project
     }
 
     public void Setup()
+    # region Rooms Items and exits 
     {
       // NOTE define a structure; list all rooms then all items, or all rooms and directions. 
 
-      Room sketchyShack = new Room("Sketchy Shack", "You awaken in a Sketchy shack with no knowledge of how you got there. How did you get there? Where are you?");
+      Room sketchyShack = new Room("Sketchy Shack", "You awaken in a Sketchy shack with no knowledge of how you got there. How did you get there? Where are you? You see a door to the north....do you dare go though it?");
 
       //leave the sketchyShack and find an axe/hammer/used hunting knife?<--that sounds far fetched but kinda dope.
 
-      Room mistShroudedRoad = new Room(" Mist shrouded dirt road", "you leave the shack and find yourself at the end of a road covered in think mist, to thick to determine any land marks or direction");
+      Room mistShroudedRoad = new Room(" Mist shrouded dirt road", "you leave the shack and find yourself at the end of a road covered in thick mist, too thick to determine any land marks or direction. As you step outside of the shack your toe kicks something. You look down and see a worn looking hunting knife. Do you grab it?");
 
       /*SO CONFUSED!!!! HOW WHERE AND WHEN DO I USE ITEMS!!!*/
 
@@ -96,7 +110,7 @@ namespace CastleGrimtol.Project
 
       Item flashLight = new Item("Flashlight", "On the mist shrouded road you come across an abandoned car. The car seems to have what looks like dried blood on the windsheild and on the ground by the open driverside door. You approach the vehichle with eary apprehension and search the inside. You don't discover anything of real use...besides a flashlight ");
       Item molotovCocktail = new Item("Molotov Cocktail", "At the entrance of The Cave you find a convient stash of Molotov CockTails but, there is only one left inside the weathered looking box.");
-
+      #endregion
 
 
       //TODO
@@ -110,11 +124,13 @@ namespace CastleGrimtol.Project
       #endregion
 
       #region ITEMS
+      mistShroudedRoad.AddItem(huntingKnife);
+      mistShroudedForest.AddItem(flashLight);
+      mistShroudedForest.AddItem(molotovCocktail);
 
-      mistShroudedRoad.Items.Add(huntingKnife);
-      mistShroudedForest.Items.Add(flashLight);
-      mistShroudedForest.Items.Add(molotovCocktail);
+
       #endregion
+
       CurrentRoom = (Room)sketchyShack;
 
     }
@@ -170,6 +186,7 @@ namespace CastleGrimtol.Project
       System.Console.WriteLine("Do you remember your name?");
       string name = Console.ReadLine();
       CurrentPlayer = new Player(name);
+      System.Console.WriteLine($"{CurrentPlayer.PlayerName} you are confused but unharmed");
 
 
       while (inGame)
@@ -177,17 +194,18 @@ namespace CastleGrimtol.Project
         System.Console.WriteLine("What do you want to do?");
         string[] input = Console.ReadLine().ToLower().Split();
         string command = input[0];
-        string secondary = "";
+        string option = "";
         if (input.Length > 1)
         {
-          secondary = input[1];
+          option = input[1];
         }
         #region switchDirectionandCommands
+
         switch (command)
         {
           //ok now lets try to move?
           case "go":
-            Go(secondary);
+            Go(option);
             System.Console.WriteLine($"You entered{CurrentRoom.Name}.");
             break;
           case "quit":
@@ -197,17 +215,24 @@ namespace CastleGrimtol.Project
           case "look":
             Look();
             break;
+
           case "satchel":
             Inventory();
             break;
+
           case "restart":
             Reset();
             break;
           case "grab":
-            TakeItem(secondary);
+            TakeItem(option);
             break;
+
           case "help":
             Help();
+            break;
+
+          case "use":
+            UseItem(option);
             break;
           default:
             System.Console.WriteLine("You cannot do that");
@@ -226,6 +251,17 @@ namespace CastleGrimtol.Project
       if (item != null)
       {
         System.Console.WriteLine(item.Description);
+        CurrentPlayer.Inventory.Add(item);
+        // is this what kenny and brooklyn meant? removed item? UUUGGGGHHH!??
+        CurrentRoom.Items.Remove(item);
+        System.Console.WriteLine($"You have taken the {item.Name} and placed it in your satchel.");
+
+
+      }
+      else
+      {
+        // Im not sure this one will work out :(
+        System.Console.WriteLine("There is nothing of use left in this area.");
 
       }
 
@@ -233,7 +269,12 @@ namespace CastleGrimtol.Project
 
     public void UseItem(string itemName)
     {
-
+      // ok i think this is kinda like takeitem? 
+      Item item = CurrentPlayer.Inventory.Find(i => i.Name.ToLower() == itemName.ToLower());
+      //no squiggles....I hope this will work 
+      CurrentPlayer.Inventory.Remove(item);
+      //idk how to actually display that the item was used
+      System.Console.WriteLine($"you use{itemName}");
     }
   }
 }
