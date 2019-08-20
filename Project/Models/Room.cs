@@ -11,6 +11,7 @@ namespace CastleGrimtol.Project.Models
 
     public string Name { get; set; }
     public string Description { get; set; }
+    public string AltDescription { get; set; } //NOTE this could be the description for after items have been taking
     public List<Item> Items { get; set; }
     public Dictionary<string, IRoom> Exits { get; set; }
 

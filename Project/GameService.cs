@@ -41,7 +41,7 @@ namespace CastleGrimtol.Project
       System.Console.WriteLine($"{CurrentPlayer.PlayerName}'s satchel");
       foreach (var item in CurrentPlayer.Inventory)
       {
-        System.Console.WriteLine("You have ", item.Name, "in your satchel");
+        System.Console.WriteLine("You have " + item.Name + " in your satchel");
         // System.Console.WriteLine(item.Name);
       }
 
@@ -51,7 +51,7 @@ namespace CastleGrimtol.Project
     {
 
       // System.Console.WriteLine($"You enter {CurrentRoom.Name}");
-      System.Console.WriteLine($"{CurrentRoom.Description}");
+      System.Console.WriteLine($"{CurrentRoom.Description}"); //NOTE Would need control flow logic to determine which description to display
 
       foreach (var item in CurrentRoom.Items)
       {
@@ -89,6 +89,8 @@ namespace CastleGrimtol.Project
 
       Room mistShroudedRoad = new Room(" Mist shrouded dirt road", "you leave the shack and find yourself at the end of a road covered in thick mist, too thick to determine any land marks or direction. As you step outside of the shack your toe kicks something. You look down and see a worn looking hunting knife. Do you grab it?");
 
+      // Room alteredMistShroudedRoad = new Room
+
       /*SO CONFUSED!!!! HOW WHERE AND WHEN DO I USE ITEMS!!!*/
 
 
@@ -105,11 +107,11 @@ namespace CastleGrimtol.Project
       // mistShroudedForest.Exits.Add("North", theCave);
       #endregion
 
-      Item huntingKnife = new Item("Hunting Knife", "As you leave the Sketchy Shack your boot hits something just outside the door, you look down and see a worn looking hunting knife");
+      Item huntingKnife = new Item("HuntingKnife", "As you leave the Sketchy Shack your boot hits something just outside the door, you look down and see a worn looking hunting knife");
 
 
       Item flashLight = new Item("Flashlight", "On the mist shrouded road you come across an abandoned car. The car seems to have what looks like dried blood on the windsheild and on the ground by the open driverside door. You approach the vehichle with eary apprehension and search the inside. You don't discover anything of real use...besides a flashlight ");
-      Item molotovCocktail = new Item("Molotov Cocktail", "At the entrance of The Cave you find a convient stash of Molotov CockTails but, there is only one left inside the weathered looking box.");
+      Item molotovCocktail = new Item("MolotovCocktail", "At the entrance of The Cave you find a convient stash of Molotov CockTails but, there is only one left inside the weathered looking box.");
       #endregion
 
 
@@ -247,7 +249,19 @@ namespace CastleGrimtol.Project
     }
     public void TakeItem(string itemName)
     {
-      Item item = CurrentRoom.Items.Find(i => i.Name.ToLower() == itemName.ToLower());
+      #region NOTE List<>.Find() under the hood
+      Item targetItem = null;
+      for (int i = 0; i < CurrentRoom.Items.Count; i++)
+      {
+        Item itm = CurrentRoom.Items[i];
+        if (itm.Name.ToLower() == itemName.ToLower())
+        {
+          targetItem = itm;
+        }
+      }
+      #endregion
+
+      Item item = CurrentRoom.Items.Find(i => i.Name.ToLower() == itemName.ToLower()); //NOTE this condition is extremely case and whitespace sensitive
       if (item != null)
       {
         System.Console.WriteLine(item.Description);
